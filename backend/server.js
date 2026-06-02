@@ -20,12 +20,11 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://mini-social-post-application-one.vercel.app/"
+      "https://mini-social-post-application-one.vercel.app"
     ],
     credentials: true
   })
 );
-
 // Serve uploaded files (development fallback)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
