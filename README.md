@@ -4,9 +4,9 @@ A full-stack social networking platform inspired by TaskPlanet Social Feed.
 
 ## Live Demo
 
-Frontend: https://your-vercel-link.vercel.app
+Frontend: https://mini-social-post-application-one.vercel.app/
 
-Backend API: https://your-render-link.onrender.com
+Backend API: https://mini-social-post-application-ug33.onrender.com/
 
 A lightweight full-stack social posting app (React + Node/Express + MongoDB) featuring user authentication, Google sign-in via Firebase, image uploading, and basic social interactions (posts, comments, follow system).
 
