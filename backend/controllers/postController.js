@@ -57,7 +57,11 @@ export const createPost = async (req, res) => {
         try {
           imageUrl = await uploadImage(req.file.buffer);
         } catch (uploadErr) {
-          console.error('Cloudinary upload failed:', uploadErr);
+          console.error('Cloudinary upload failed:', {
+            message: uploadErr?.message,
+            name: uploadErr?.name,
+            stack: uploadErr?.stack,
+          });
           // Don't fail the entire request; proceed without image
         }
       } else {
