@@ -65,10 +65,18 @@ export const updateCurrentUser = async (req, res) => {
     }
 
     if (req.file) {
-      if (isCloudinaryEnabled()) {
+      if (!isCloudinaryEnabled()) {
+        return res.status(500).json({ error: 'Cloudinary is not configured. Avatar uploads are disabled.' });
+      }
+      try {
         updates.avatar = await uploadImage(req.file.buffer);
-      } else {
-        console.warn('Cloudinary is not configured; avatar upload skipped.');
+      } catch (uploadErr) {
+        console.error('Cloudinary upload failed:', {
+          message: uploadErr?.message,
+          name: uploadErr?.name,
+          stack: uploadErr?.stack,
+        });
+        return res.status(500).json({ error: 'Avatar upload failed. Please try again.' });
       }
     }
 

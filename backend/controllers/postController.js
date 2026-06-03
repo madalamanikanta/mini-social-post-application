@@ -53,33 +53,23 @@ export const createPost = async (req, res) => {
 
     let imageUrl;
     if (hasImage) {
-      if (isCloudinaryEnabled()) {
-        try {
-          imageUrl = await uploadImage(req.file.buffer);
-        } catch (uploadErr) {
-          console.error('Cloudinary upload failed:', {
-            message: uploadErr?.message,
-            name: uploadErr?.name,
-            stack: uploadErr?.stack,
-          });
-          // Don't fail the entire request; proceed without image
-        }
-      } else {
-        // Save locally to backend/uploads/posts
-        try {
-          const uploadDir = path.join(process.cwd(), 'uploads', 'posts');
-          fs.mkdirSync(uploadDir, { recursive: true });
-          const safeName = `${Date.now()}-${req.file.originalname.replace(/[^a-z0-9.\-]/gi, '_')}`;
-          const filePath = path.join(uploadDir, safeName);
-          fs.writeFileSync(filePath, req.file.buffer);
-          const host = process.env.SERVER_URL || `http://localhost:${process.env.PORT || 5000}`;
-          imageUrl = `${host}/uploads/posts/${safeName}`;
-        } catch (localErr) {
-          console.error('Local image save failed:', localErr);
-        }
+      if (!isCloudinaryEnabled()) {
+        return res.status(500).json({ error: 'Cloudinary is not configured. Image uploads are disabled.' });
+      }
+
+      try {
+        imageUrl = await uploadImage(req.file.buffer);
+      } catch (uploadErr) {
+        console.error('Cloudinary upload failed:', {
+          message: uploadErr?.message,
+          name: uploadErr?.name,
+          stack: uploadErr?.stack,
+        });
+        return res.status(500).json({ error: 'Image upload failed. Please try again.' });
       }
     }
-    console.log("Image URL saved =", imageUrl);
+
+    console.log('Final image URL saved', imageUrl);
     const post = await Post.create({
       user: req.userId,
       content: content || '',
@@ -195,22 +185,23 @@ export const updatePost = async (req, res) => {
     }
 
     if (hasNewImage) {
-      if (post.image && !isCloudinaryEnabled()) {
-        deleteLocalImageIfNeeded(post.image);
+      console.log('Cloudinary enabled =', isCloudinaryEnabled());
+      if (!isCloudinaryEnabled()) {
+        return res.status(500).json({ error: 'Cloudinary is not configured. Image uploads are disabled.' });
       }
 
       let imageUrl;
-      if (isCloudinaryEnabled()) {
+      try {
         imageUrl = await uploadImage(req.file.buffer);
-      } else {
-        const uploadDir = path.join(process.cwd(), 'uploads', 'posts');
-        fs.mkdirSync(uploadDir, { recursive: true });
-        const safeName = `${Date.now()}-${req.file.originalname.replace(/[^a-z0-9.\-]/gi, '_')}`;
-        const filePath = path.join(uploadDir, safeName);
-        fs.writeFileSync(filePath, req.file.buffer);
-        const host = process.env.SERVER_URL || `http://localhost:${process.env.PORT || 5000}`;
-        imageUrl = `${host}/uploads/posts/${safeName}`;
+      } catch (uploadErr) {
+        console.error('Cloudinary upload failed:', {
+          message: uploadErr?.message,
+          name: uploadErr?.name,
+          stack: uploadErr?.stack,
+        });
+        return res.status(500).json({ error: 'Image upload failed. Please try again.' });
       }
+
       post.image = imageUrl;
     }
 

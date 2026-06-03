@@ -313,13 +313,26 @@ function PostCard({ post, onLike, onUpdate, onDelete }) {
           </Typography>
         )}
         {localPost.image && (
-            <Box
-              component="img"
-              src={localPost.image}
-              alt={`${localPost.user.name} post image`}
-              sx={{ width: '100%', height: 'auto', maxHeight: 700, objectFit: 'contain', borderRadius: 3, display: 'block', mx: 'auto' }}
-            />
-          )}
+          <Box
+            component="img"
+            
+            src={
+              localPost.image.startsWith('http')
+                ? localPost.image
+                : `https://mini-social-post-application-ug33.onrender.com${localPost.image}`
+            }
+            alt={`${localPost.user.name} post image`}
+            sx={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: 700,
+              objectFit: 'contain',
+              borderRadius: 3,
+              display: 'block',
+              mx: 'auto',
+            }}
+          />
+        )}
       </CardContent>
       {onLike && (
         <CardActions disableSpacing sx={{ px: 3, pb: 2, pt: 0 }}>

@@ -27,7 +27,7 @@ function PostDetails() {
   const [commentText, setCommentText] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
+  const BACKEND_URL = import.meta.env.VITE_API_URL?.replace('/api', '');
   const fetchPost = async () => {
     try {
       const response = await api.get(`/posts/${id}`);
@@ -126,9 +126,17 @@ function PostDetails() {
             </Button>
           }
         />
-        {post?.image && (
-          <Box component="img" src={post.image} alt="Post image" sx={{ width: '100%', borderRadius: 3, my: 2 }} />
-        )}
+
+        <Box
+          component="img"
+          src={
+            post.image?.startsWith('http')
+              ? post.image
+              : `${BACKEND_URL}${post.image}`
+          }
+          alt="Post image"
+          sx={{ width: '100%', borderRadius: 3, my: 2 }}
+        />
         <CardContent>
           <Typography sx={{ whiteSpace: 'pre-line' }}>{post?.content}</Typography>
         </CardContent>

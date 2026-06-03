@@ -25,8 +25,6 @@ app.use(
     credentials: true
   })
 );
-// Serve uploaded files (development fallback)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB Atlas using connection helper.
 connectDB();

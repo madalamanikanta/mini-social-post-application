@@ -4,10 +4,13 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const hasCloudinaryConfig =
+const hasCloudinaryConfig = Boolean(
   process.env.CLOUDINARY_CLOUD_NAME &&
   process.env.CLOUDINARY_API_KEY &&
-  process.env.CLOUDINARY_API_SECRET;
+  process.env.CLOUDINARY_API_SECRET
+);
+
+console.log('Cloudinary enabled =', hasCloudinaryConfig);
 
 if (hasCloudinaryConfig) {
   cloudinary.config({
@@ -19,6 +22,7 @@ if (hasCloudinaryConfig) {
 
 const uploadFromBuffer = (buffer) =>
   new Promise((resolve, reject) => {
+    console.log('Cloudinary upload started');
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder: 'mini_social_post_application',
@@ -26,9 +30,11 @@ const uploadFromBuffer = (buffer) =>
       },
       (error, result) => {
         if (error) {
+          console.error('Cloudinary upload failed', error);
           reject(error);
           return;
         }
+        console.log('Cloudinary upload success', result?.secure_url);
         resolve(result);
       }
     );
@@ -43,6 +49,10 @@ export const uploadImage = async (buffer) => {
   }
 
   const result = await uploadFromBuffer(buffer);
+  if (!result?.secure_url) {
+    throw new Error('Cloudinary did not return a secure URL.');
+  }
+
   return result.secure_url;
 };
 
