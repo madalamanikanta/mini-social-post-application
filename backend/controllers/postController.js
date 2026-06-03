@@ -42,6 +42,10 @@ export const getPosts = async (req, res) => {
 export const createPost = async (req, res) => {
   try {
     console.log('createPost req.body:', req.body);
+    console.log("Cloudinary enabled =", isCloudinaryEnabled());
+    console.log("Cloud name =", process.env.CLOUDINARY_CLOUD_NAME);
+    console.log("Has API key =", !!process.env.CLOUDINARY_API_KEY);
+    console.log("Has API secret =", !!process.env.CLOUDINARY_API_SECRET);
     console.log('createPost req.file:', req.file ? { originalname: req.file.originalname, mimetype: req.file.mimetype, size: req.file.size } : null);
 
     const content = req.body.content?.trim();
@@ -71,7 +75,7 @@ export const createPost = async (req, res) => {
         }
       }
     }
-
+    console.log("Image URL saved =", imageUrl);
     const post = await Post.create({
       user: req.userId,
       content: content || '',
