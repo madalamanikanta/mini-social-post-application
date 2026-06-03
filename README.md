@@ -12,6 +12,22 @@ A lightweight full-stack social posting app (React + Node/Express + MongoDB) fea
 
 ---
 
+## Assignment Coverage
+
+Implemented Features:
+- User Authentication (Email/Password + Google Sign-In)
+- User Profile Management
+- Create, Edit and Delete Posts
+- Image Upload Support
+- Like and Comment System
+- Follow / Unfollow Users
+- User Search
+- Responsive Mobile and Desktop UI
+- MongoDB Atlas Integration
+- Cloudinary Image Hosting
+- Deployed Frontend and Backend
+
+
 ## Project Overview
 
 Mini Social Post Application is a full-stack social networking platform inspired by the TaskPlanet Social Feed.
@@ -205,3 +221,10 @@ Notes:
 
 ### Search Users(Mobile)
 ![Search](docs/screenshots/mobile-search.png)
+
+
+## Author
+
+Madala Manikanta
+
+Developed as part of the 3W Full Stack Internship Assignment.
